@@ -68,3 +68,23 @@ export const updateUser = async (req, res, next) => {
     })
     .catch(err => next(err));
 };
+
+/** @type {import("express").RequestHandler} */
+export const getChatByUser = (req, res, next) => {
+  const isGroup = req.query.group === 'true' || false;
+  const { userId, id } = { ...req.params, ...req.user };
+  if (userId !== id) return res.status(403).end();
+
+  prisma.chat
+    .findMany({
+      orderBy: { editedAt: 'desc' },
+      where: {
+        isGroup,
+        members: {
+          some: { id },
+        },
+      },
+    })
+    .then(chats => res.json(chats))
+    .catch(err => next(err));
+};

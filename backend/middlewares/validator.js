@@ -41,6 +41,35 @@ const r = {
     .trim()
     .notEmpty()
     .withMessage('Password cannot be empty'),
+
+  chat: body('members')
+    .isArray({ min: 2, max: 2 })
+    .withMessage('Member id list need to be an array with length of 2'),
+
+  group: body('members')
+    .isArray({ min: 2 })
+    .withMessage(
+      'Member id list need to be an array with smallest length of 2',
+    ),
+
+  userIds: body('members').custom(async ids => {
+    if (!Array.isArray(ids)) throw new Error('IDs must be an array');
+
+    // Check if all IDs exist in the database
+    const existingIds = await prisma.user.findMany({
+      where: { id: { in: ids } },
+      select: { id: true },
+    });
+
+    const existingIdsSet = new Set(existingIds.map(item => item.id));
+    const invalidIds = ids.filter(id => !existingIdsSet.has(id));
+
+    if (invalidIds.length > 0) {
+      throw new Error(`Invalid IDs: ${invalidIds.join(', ')}`);
+    }
+
+    return true;
+  }),
 };
 
 // v = validate
@@ -58,4 +87,6 @@ const v = (req, res, next) => {
 
 export const regValidation = [r.name, r.email, r.emailInUse, r.password, v];
 export const loginValidation = [r.email, r.password, v];
-export const userUpdateValidation = [r.emailUpdate, v]; // Empty property will not be updated, see userController.updateUser
+export const userUpdateValidation = [r.emailUpdate, v];
+export const chatValidation = [r.chat, r.userIds, v];
+export const groupValidation = [r.group, r.userIds, v];
