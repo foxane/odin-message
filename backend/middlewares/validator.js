@@ -15,16 +15,27 @@ const r = {
     .notEmpty()
     .withMessage('Email cannot be empty')
     .isEmail()
-    .withMessage('Email provided is not valid email'),
+    .withMessage('Invalid email format'),
 
-  emailInUse: body('email').custom(async email => {
+  emailInUse: body('email').custom(async (email, { req }) => {
     const user = await prisma.user.findUnique({ where: { email } });
     if (user) {
-      throw new Error('Email is already in use');
+      throw new Error('Email already in use');
     }
-
     return true;
   }),
+
+  emailUpdate: body('email')
+    .trim()
+    .optional({ values: 'falsy' })
+    .isEmail()
+    .withMessage('Invalid email format')
+    .custom(async (email, { req }) => {
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (user && req.user.id !== user.id)
+        throw new Error('Email already in use');
+      return true;
+    }),
 
   password: body('password')
     .trim()
@@ -36,7 +47,7 @@ const r = {
 const v = (req, res, next) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
-    const errors = result.errors.map(err => err.msg);
+    const errors = result.array().map(err => err.msg);
     return res
       .status(400)
       .json({ message: 'Validation failed', errorDetails: errors });
@@ -47,3 +58,4 @@ const v = (req, res, next) => {
 
 export const regValidation = [r.name, r.email, r.emailInUse, r.password, v];
 export const loginValidation = [r.email, r.password, v];
+export const userUpdateValidation = [r.emailUpdate, v]; // Empty property will not be updated, see userController.updateUser

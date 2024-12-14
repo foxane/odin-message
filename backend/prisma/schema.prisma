@@ -13,6 +13,7 @@ model User {
   email    String @unique
   password String
   bio      String @default("Too cool to write bio")
+  role     Role   @default(USER)
 
   messages      Message[]
   conversations Conversation[]
@@ -35,4 +36,9 @@ model Conversation {
   isGroup     Boolean
   messages    Message[]
   participant User[]
+}
+
+enum Role {
+  ADMIN
+  USER
 }
