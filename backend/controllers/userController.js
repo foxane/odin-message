@@ -84,6 +84,18 @@ export const getChatByUser = (req, res, next) => {
           some: { id },
         },
       },
+      include: {
+        members: {
+          select: { id: true, name: true },
+        },
+        messages: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          include: {
+            user: { select: { id: true, name: true } },
+          },
+        },
+      },
     })
     .then(chats => res.json(chats))
     .catch(err => next(err));
