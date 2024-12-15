@@ -1,8 +1,10 @@
 import ChatBubble from '../components/ChatBubble';
 import ChatCard from '../components/ChatCard';
 import ChatInput from '../components/ChatInput';
+import Navbar from '../components/Navbar';
 import { Button } from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import { Link } from 'react-router-dom';
 
 const msg = {
   content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, praesentium aut. Corrupti minima tempore minus ad, ipsam, corporis exercitationem molestiae hic veritatis officiis vitae repellat voluptates perferendis maiores mollitia quod.`,
@@ -24,7 +26,8 @@ const msg2 = {
 
 const mockChat = {
   id: '66509a12-4b1c-4541-b103-5e91de0e2722',
-  isGroup: false,
+  isGroup: 0,
+  name: 'My Group',
   editedAt: '2024-12-15T07:46:46.346Z',
   members: [
     {
@@ -55,6 +58,7 @@ const mockChat = {
 function CompsPage() {
   return (
     <div className="flex gap-2 flex-wrap">
+      <Link to={'/'}>Home</Link>
       <div className="flex flex-col gap-2 items-start p-2">
         <p className="text-xl font-semibold">Buttons</p>
         <Button>Default</Button>
@@ -86,6 +90,10 @@ function CompsPage() {
         <p className="text-xl font-semibold">Chat card</p>
         <ChatCard chat={mockChat} active />
         <ChatCard chat={mockChat} />
+      </div>
+      <div className="flex flex-col items-start p-2">
+        <p className="text-xl font-semibold">Navbar</p>
+        <Navbar />
       </div>
     </div>
   );

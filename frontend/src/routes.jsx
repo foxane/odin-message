@@ -3,8 +3,8 @@ import CompsPage from './pages/Comps';
 import Home from './pages/Home';
 
 const routes = createBrowserRouter([
-  { path: '/home', element: <Home /> },
-  { path: '/', element: <CompsPage /> }, // TODO: CHANGE THE PATH
+  { path: '/', element: <Home /> },
+  { path: '/dev/comps', element: <CompsPage /> }, // TODO: CHANGE THE PATH
 ]);
 
 export default routes;
