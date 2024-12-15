@@ -35,6 +35,21 @@ export const getSingleUser = (req, res, next) => {
 };
 
 /** @type {import("express").RequestHandler} */
+export const getSelf = (req, res, next) => {
+  const { id } = req.user;
+
+  prisma.user
+    .findUnique({
+      where: { id },
+    })
+    .then(user => {
+      const { password: _, ...data } = user;
+      res.json(data);
+    })
+    .catch(err => next(err));
+};
+
+/** @type {import("express").RequestHandler} */
 export const updateUser = async (req, res, next) => {
   const { userId } = req.params;
   const allowedFields = ['name', 'email', 'bio', 'password'];
