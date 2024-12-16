@@ -1,17 +1,26 @@
-import { Navigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import useUser from '../hooks/useUser';
+import { useEffect } from 'react';
+import ScreenSize from '../components/ScreenSize';
+import Navbar from '../components/Navbar';
 
 export default function Home() {
   const { user } = useUser();
+  const navigate = useNavigate();
 
-  if (!user) return <Navigate to={'/auth'} />;
+  useEffect(() => {
+    if (!user) navigate('/auth');
+  }, [user, navigate]);
+
   return (
-    <div>
-      {Object.entries(user).map(([key, value]) => (
-        <div key={key}>
-          <strong>{key}:</strong> {value}
-        </div>
-      ))}
-    </div>
+    <main className="h-dvh">
+      <nav className="fixed bottom-0 w-full">
+        <Navbar />
+      </nav>
+
+      <Outlet />
+
+      <ScreenSize />
+    </main>
   );
 }

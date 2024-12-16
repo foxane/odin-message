@@ -1,17 +1,14 @@
 import { object } from 'prop-types';
 import userIcon from '../assets/user.svg';
+import useUser from '../hooks/useUser';
 
 export default function ChatBubble({ message }) {
   // Infer if msg is received or sent
-  const user = {
-    // UserProvider context mock
-    id: 0,
-    name: 'admin',
-  };
+  const { user } = useUser();
   const isSend = user.id === message.user.id;
 
   return (
-    <div className="w-full">
+    <div className={`w-full p-2 flex ${isSend ? 'justify-end' : ''}`}>
       <div className="max-w-96 flex items-start gap-2">
         {!isSend && (
           <img

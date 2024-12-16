@@ -47,9 +47,9 @@ export default function AuthPage() {
             </div>
           )}
 
-          {/* Wrapper to center vertical on big screen */}
           {form === 'login' ? (
             <>
+              {/* Wrapper to center vertical on big screen */}
               <div className="flex flex-col gap-4">
                 <Input
                   name="email"

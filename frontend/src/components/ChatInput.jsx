@@ -1,34 +1,45 @@
 import { useRef } from 'react';
-import { func } from 'prop-types';
+import { func, string } from 'prop-types';
 import sendIcon from '../assets/send.svg';
 
-export default function ChatInput() {
+export default function ChatInput({ value, setValue, onSend }) {
   const textareaRef = useRef(null);
 
-  const handleInput = () => {
+  const handleInput = e => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
+    setValue(e.target.value);
+  };
+
+  const handleSend = () => {
+    if (!value) return;
+    onSend();
   };
 
   return (
-    <div className="w-full flex items-end gap-1">
+    <>
       <textarea
         ref={textareaRef}
-        className="flex-1 resize-none overflow-hidden rounded-xl bg-gray-300 p-2"
+        value={value}
+        className="flex-1 resize-none overflow-hidden rounded-xl bg-gray-300 border-2 border-gray-600 p-2"
         rows="1"
         onInput={handleInput}
       />
 
-      <button className="bg-gray-500 rounded-full p-1 hover:bg-gray-700">
+      <button
+        onClick={handleSend}
+        className="bg-gray-500 rounded-full p-1 hover:bg-gray-700">
         <img className="w-9" src={sendIcon} alt="send icon" />
       </button>
-    </div>
+    </>
   );
 }
 
 ChatInput.propTypes = {
-  onSubmit: func,
+  value: string,
+  setValue: func,
+  onSend: func,
 };

@@ -10,10 +10,10 @@ const UserProvider = ({ children }) => {
   const url = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    let token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (!token) return;
-    setLoading(true);
 
+    setLoading(true);
     fetch(`${url}/user/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json())
       .then(data => {

@@ -2,7 +2,7 @@ import { node, oneOf, string } from 'prop-types';
 
 export function Button({ className, children, model = 'default', ...props }) {
   const base =
-    'py-1 px-4 rounded-sm border font-sans text-lg transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed';
+    'py-1 px-4 rounded border font-sans text-lg transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed';
 
   const types = {
     default:

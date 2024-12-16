@@ -8,12 +8,7 @@ export default function NavBtn({ children, isActive, link }) {
     : 'stroke-gray-100 fill-gray-100';
 
   return (
-    <Link
-      to={link}
-      name="chat"
-      className={`p-3 border-l-4 ${
-        isActive ? 'border-sky-400' : 'border-white'
-      }`}>
+    <Link to={link} className={'p-3'}>
       {Children.map(children, child =>
         child.type === 'svg'
           ? cloneElement(child, {
