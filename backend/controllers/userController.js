@@ -104,8 +104,7 @@ export const getChatByUser = (req, res, next) => {
           select: { id: true, name: true },
         },
         messages: {
-          orderBy: { createdAt: 'desc' },
-          take: 1,
+          orderBy: { createdAt: 'asc' }, // Get messages oldest first
           include: {
             user: { select: { id: true, name: true } },
           },

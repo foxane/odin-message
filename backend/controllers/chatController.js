@@ -76,7 +76,12 @@ export const getMessageByChat = (req, res, next) => {
   prisma.chat
     .findUnique({
       where: { id: chatId },
-      include: { messages: { orderBy: { createdAt: 'desc' } } },
+      include: {
+        messages: {
+          include: { user: { select: { id: true, name: true } } },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
     })
     .then(messages => res.json(messages))
     .catch(err => next(err));
