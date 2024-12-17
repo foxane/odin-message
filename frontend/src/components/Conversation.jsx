@@ -4,16 +4,18 @@ import backArrow from '../assets/back.svg';
 import ChatBubble from './ChatBubble';
 import ChatInput from './ChatInput';
 import { useState, useRef, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
-export default function Conversation({ chat, closeChat, sendMsg }) {
+export default function Conversation({ chat, closeChat }) {
   const { user } = useUser();
   const otherUserName = chat.members?.find(usr => usr.id !== user.id).name;
   const [newMsgVal, setMsgVal] = useState('');
   const [scroll, setScroll] = useState(false);
   const messagesEndRef = useRef(null);
+  const { sendMessage } = useOutletContext();
 
   const handleSendMsg = () => {
-    sendMsg(newMsgVal, user.id);
+    sendMessage({ chatId: chat.id, content: newMsgVal });
     setScroll(true);
     setMsgVal('');
   };

@@ -86,7 +86,6 @@ export const updateUser = async (req, res, next) => {
 
 /** @type {import("express").RequestHandler} */
 export const getChatByUser = (req, res, next) => {
-  const isGroup = req.query.group === 'true' || false;
   const { userId, id } = { ...req.params, ...req.user };
   if (userId !== id) return res.status(403).end();
 
@@ -94,7 +93,6 @@ export const getChatByUser = (req, res, next) => {
     .findMany({
       orderBy: { editedAt: 'desc' },
       where: {
-        isGroup,
         members: {
           some: { id },
         },

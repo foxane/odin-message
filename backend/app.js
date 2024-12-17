@@ -4,8 +4,7 @@ import { cors, morgan } from './middlewares/config.js';
 import userRouter from './routes/userRouter.js';
 import authRouter from './routes/authRouter.js';
 import chatRouter from './routes/chatRouter.js';
-
-const app = express();
+import { app, server } from './socket.js'; // Server initialization
 
 app.use(cors);
 app.use(morgan);
@@ -16,6 +15,6 @@ app.use('/users?', userRouter);
 app.use('/chats?', chatRouter);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log('Server listening on port: ', port);
 });

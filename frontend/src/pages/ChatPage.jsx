@@ -4,27 +4,11 @@ import Conversation from '../components/Conversation';
 import { Button } from '../components/ui/Button';
 import { useOutletContext } from 'react-router-dom';
 import { bool } from 'prop-types';
-import { Message } from '../lib/utils';
 
 export default function ChatPage({ isGroup }) {
   const [activeChat, setActiveChat] = useState(null);
-  const { groupList, chatList, setGroupList, setChatList } = useOutletContext();
+  const { groupList, chatList } = useOutletContext();
   const conList = isGroup ? [...groupList] : [...chatList];
-
-  const sendMsg = (content, userId) => {
-    // Update UI messages
-    const updatedMsgObj = {
-      ...activeChat,
-      messages: [...activeChat.messages, new Message(content, userId)],
-    };
-    const updatedConList = conList.map(chat =>
-      chat.id === activeChat.id ? updatedMsgObj : chat,
-    );
-    setActiveChat(updatedMsgObj);
-    isGroup ? setGroupList(updatedConList) : setChatList(updatedConList);
-
-    // TODO: send message with websocket
-  };
 
   useEffect(() => {
     setActiveChat(null); // Close conversation when isGroup(page) change
@@ -63,7 +47,6 @@ export default function ChatPage({ isGroup }) {
           <Conversation
             chat={activeChat}
             closeChat={() => setActiveChat(null)}
-            sendMsg={sendMsg}
           />
         </div>
       )}
