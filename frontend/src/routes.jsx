@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import CompsPage from './pages/Comps';
+import CompsPage from './lib/Comps';
 import Home from './pages/Home';
 import AuthPage from './pages/Auth';
 import ChatPage from './pages/ChatPage';
@@ -13,6 +13,10 @@ const routes = createBrowserRouter([
       {
         index: true,
         element: <ChatPage />,
+      },
+      {
+        path: 'group',
+        element: <ChatPage isGroup={true} />,
       },
     ],
   },

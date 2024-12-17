@@ -1,42 +1,54 @@
-import useUser from '../hooks/useUser';
-import useFetch from '../hooks/useFetch';
 import ChatCard from '../components/ChatCard';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Conversation from '../components/Conversation';
 import { Button } from '../components/ui/Button';
+import { useOutletContext } from 'react-router-dom';
+import { bool } from 'prop-types';
+import { Message } from '../lib/utils';
 
-export default function ChatPage() {
-  const { user } = useUser();
-  const {
-    data: chats,
-    loading,
-    error,
-  } = useFetch(user ? `/user/${user.id}/chats` : null);
-  const [chat, setChat] = useState(null);
+export default function ChatPage({ isGroup }) {
+  const [activeChat, setActiveChat] = useState(null);
+  const { groupList, chatList, setGroupList, setChatList } = useOutletContext();
+  const conList = isGroup ? [...groupList] : [...chatList];
 
-  const handleChat = chat => setChat(chat);
+  const sendMsg = (content, userId) => {
+    // Update UI messages
+    const updatedMsgObj = {
+      ...activeChat,
+      messages: [...activeChat.messages, new Message(content, userId)],
+    };
+    const updatedConList = conList.map(chat =>
+      chat.id === activeChat.id ? updatedMsgObj : chat,
+    );
+    setActiveChat(updatedMsgObj);
+    isGroup ? setGroupList(updatedConList) : setChatList(updatedConList);
 
-  if (loading) return <>Retrieving Conversations...</>;
-  if (error) return <>Failed retrieving conversations {error}</>;
+    // TODO: send message with websocket
+  };
+
+  useEffect(() => {
+    setActiveChat(null); // Close conversation when isGroup(page) change
+  }, [isGroup]);
+
   return (
     <div className="flex flex-col h-full">
-      <div className={`${chat && 'hidden'} h-full relative`}>
-        {chats &&
-          chats.length > 0 &&
-          chats.map(chat => (
+      <div className={`${activeChat && 'hidden'} h-full`}>
+        {conList &&
+          conList.length > 0 &&
+          conList.map(chat => (
             <ChatCard
               key={chat.id}
               chat={chat}
-              onClick={() => handleChat(chat)}
+              onClick={() => setActiveChat(chat)}
             />
           ))}
 
         <Button
           className={
-            'fixed bottom-[15%] right-10 rounded-full rounded-ee-none text-4xl font-bold flex items-start px-4 py-4 hover:bg-gray-600'
+            'fixed bottom-[15%] right-10 rounded-full rounded-ee-none text-xl font-bold flex px-2 py-2 hover:bg-gray-600'
           }>
           <svg
-            width={40}
+            width={30}
             className="stroke-gray-100 fill-gray-100"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg">
@@ -46,11 +58,19 @@ export default function ChatPage() {
         </Button>
       </div>
 
-      {chat && (
+      {activeChat && (
         <div className="h-full flex flex-col">
-          <Conversation chat={chat} closeChat={() => handleChat(null)} />
+          <Conversation
+            chat={activeChat}
+            closeChat={() => setActiveChat(null)}
+            sendMsg={sendMsg}
+          />
         </div>
       )}
     </div>
   );
 }
+
+ChatPage.propTypes = {
+  isGroup: bool,
+};

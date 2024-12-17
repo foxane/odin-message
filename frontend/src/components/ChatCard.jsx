@@ -26,12 +26,12 @@ export default function ChatCard({ chat, active, ...props }) {
           {chat.isGroup ? chat.name : otherUserName}
         </p>
         <p className="w-full text-sm font-light truncate">
-          {latestMsg.content}
+          {latestMsg && latestMsg.content}
         </p>
       </div>
 
       <p className="text-end me-6 font-normal">
-        {getTime(latestMsg.createdAt)}
+        {latestMsg && getTime(latestMsg.createdAt)}
       </p>
     </button>
   );

@@ -6,3 +6,15 @@ export const getTime = dateStr => {
 
   return date.getHours() + ':' + date.getMinutes();
 };
+
+export class Message {
+  constructor(content, userId) {
+    this.content = content;
+    this.user = {
+      id: userId,
+    };
+  }
+
+  id = new Date().toTimeString();
+  createdAt = new Date().toTimeString();
+}

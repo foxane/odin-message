@@ -4,24 +4,25 @@ import backArrow from '../assets/back.svg';
 import ChatBubble from './ChatBubble';
 import ChatInput from './ChatInput';
 import { useState, useRef, useEffect } from 'react';
-import useMessage from '../hooks/useMessage';
 
-export default function Conversation({ chat, closeChat }) {
+export default function Conversation({ chat, closeChat, sendMsg }) {
   const { user } = useUser();
-  const otherUserName = chat.members.find(usr => usr.id !== user.id).name;
+  const otherUserName = chat.members?.find(usr => usr.id !== user.id).name;
   const [newMsgVal, setMsgVal] = useState('');
+  const [scroll, setScroll] = useState(false);
   const messagesEndRef = useRef(null);
-  const { send } = useMessage(chat.id);
 
   const handleSendMsg = () => {
-    send(newMsgVal);
+    sendMsg(newMsgVal, user.id);
+    setScroll(true);
     setMsgVal('');
   };
 
   // Auto scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+    return setScroll(false);
+  }, [scroll]);
 
   return (
     <div className="flex flex-col h-full">
@@ -58,7 +59,7 @@ export default function Conversation({ chat, closeChat }) {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-6">
-        {chat.messages.length > 0 &&
+        {chat.messages?.length > 0 &&
           chat.messages.map(msg => <ChatBubble message={msg} key={msg.id} />)}
         <div ref={messagesEndRef} />
       </div>
@@ -78,4 +79,5 @@ export default function Conversation({ chat, closeChat }) {
 Conversation.propTypes = {
   chat: object,
   closeChat: func,
+  sendMsg: func,
 };
