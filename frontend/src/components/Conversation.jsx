@@ -1,30 +1,27 @@
 import { func, object } from 'prop-types';
-import useUser from '../hooks/useUser';
+import { useMessageContext, useUserContext } from '../context/useWrapper';
 import backArrow from '../assets/back.svg';
 import ChatBubble from './ChatBubble';
 import ChatInput from './ChatInput';
 import { useState, useRef, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
 
 export default function Conversation({ chat, closeChat }) {
-  const { user } = useUser();
-  const otherUserName = chat.members?.find(usr => usr.id !== user.id).name;
+  const { user } = useUserContext();
+  const { sendMessage } = useMessageContext();
   const [newMsgVal, setMsgVal] = useState('');
-  const [scroll, setScroll] = useState(false);
+
+  const otherUserName = chat.members?.find(usr => usr.id !== user.id).name;
   const messagesEndRef = useRef(null);
-  const { sendMessage } = useOutletContext();
 
   const handleSendMsg = () => {
     sendMessage({ chatId: chat.id, content: newMsgVal });
-    setScroll(true);
     setMsgVal('');
   };
 
   // Auto scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    return setScroll(false);
-  }, [scroll]);
+  }, [chat.messages]);
 
   return (
     <div className="flex flex-col h-full">
@@ -81,5 +78,4 @@ export default function Conversation({ chat, closeChat }) {
 Conversation.propTypes = {
   chat: object,
   closeChat: func,
-  sendMsg: func,
 };

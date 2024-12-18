@@ -12,7 +12,7 @@ const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <ChatPage />,
+        element: <ChatPage isGroup={false} />,
       },
       {
         path: 'group',

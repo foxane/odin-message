@@ -3,10 +3,10 @@ import { Link, Navigate } from 'react-router-dom';
 import Input from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import loadingIcon from '../assets/loading.svg';
-import useUser from '../hooks/useUser';
+import { useUserContext } from '../context/useWrapper';
 
 export default function AuthPage() {
-  const { user, loading, error, auth } = useUser();
+  const { user, loading, error, auth } = useUserContext();
   const [form, setForm] = useState('login');
   const [credentials, setCredentials] = useState({});
 

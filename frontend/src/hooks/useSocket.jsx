@@ -34,10 +34,10 @@ export default function useSocket() {
     };
   }, [socket]);
 
-  const joinChats = useCallback(
-    chatIds => {
+  const joinChat = useCallback(
+    chatId => {
       if (!socket || !isConnected) return;
-      chatIds.map(chatId => socket.emit('joinChat', chatId));
+      socket.emit('joinChat', chatId);
     },
     [socket, isConnected],
   );
@@ -54,5 +54,5 @@ export default function useSocket() {
     [socket, isConnected],
   );
 
-  return { isConnected, newMessage, sendMessage, joinChats };
+  return { isConnected, newMessage, sendMessage, joinChat };
 }

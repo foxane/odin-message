@@ -2,10 +2,10 @@ import { object, bool } from 'prop-types';
 import { getTime } from '../lib/utils';
 import userIcon from '../assets/user.svg';
 import groupIcon from '../assets/group.svg';
-import useUser from '../hooks/useUser';
+import { useUserContext } from '../context/useWrapper';
 
 export default function ChatCard({ chat, active, ...props }) {
-  const { user } = useUser();
+  const { user } = useUserContext();
   const latestMsg = chat.messages[chat.messages.length - 1];
   const otherUserName = chat.members.find(usr => usr.id !== user.id).name;
 

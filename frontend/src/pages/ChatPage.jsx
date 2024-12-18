@@ -2,17 +2,28 @@ import ChatCard from '../components/ChatCard';
 import { useEffect, useState } from 'react';
 import Conversation from '../components/Conversation';
 import { Button } from '../components/ui/Button';
-import { useOutletContext } from 'react-router-dom';
 import { bool } from 'prop-types';
+import { useMessageContext } from '../context/useWrapper';
 
 export default function ChatPage({ isGroup }) {
+  const { chatList } = useMessageContext();
   const [activeChat, setActiveChat] = useState(null);
-  const { groupList, chatList } = useOutletContext();
-  const conList = isGroup ? [...groupList] : [...chatList];
+  const [conList, setConList] = useState(null);
 
   useEffect(() => {
     setActiveChat(null); // Close conversation when isGroup(page) change
   }, [isGroup]);
+
+  useEffect(() => {
+    if (!chatList) return;
+
+    setConList(chatList.filter(el => el.isGroup === isGroup));
+  }, [chatList, isGroup]);
+
+  useEffect(() => {
+    if (!activeChat) return;
+    setActiveChat(chatList.find(el => el.id === activeChat.id));
+  }, [chatList, activeChat]);
 
   return (
     <div className="flex flex-col h-full">
