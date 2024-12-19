@@ -11,10 +11,11 @@ interface UserContextType {
   login: (cred: Credentials) => void;
   register: (cred: Credentials) => void;
   logout: () => void;
-  error: ApiError | Error | null;
+  error: ApiError | null;
+  removeError: () => void;
 }
 
-interface Credentials {
+export interface Credentials {
   name?: string;
   email: string;
   password: string;
@@ -25,7 +26,7 @@ interface AuthResponse {
   token: string;
 }
 
-class ApiError extends Error {
+export class ApiError extends Error {
   constructor(message: string, errorDetails: string[]) {
     super(message);
     this.errorDetails = errorDetails;
@@ -40,6 +41,7 @@ const UserContext = createContext<UserContextType>({
   register: () => {},
   logout: () => {},
   error: null,
+  removeError: () => {},
 });
 
 enum AuthEndpoint {
@@ -53,10 +55,12 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ApiError | Error | null>(null);
+  const [error, setError] = useState<ApiError | null>(null);
 
   // Fetch user data on page load
   useEffect(() => {
+    if (!token) return;
+
     setLoading(true);
     fetch(url, {
       headers: {
@@ -87,6 +91,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const _auth = async (endpoint: AuthEndpoint, cred: Credentials) => {
     const url = import.meta.env.VITE_API_URL + '/auth' + endpoint;
 
+    setError(null);
     setLoading(true);
 
     try {
@@ -103,6 +108,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const data = (await response.json()) as AuthResponse;
+      localStorage.setItem('token', data.token);
       setUser(data.user);
     } catch (err: unknown) {
       if (err instanceof ApiError) {
@@ -130,9 +136,13 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('token');
   };
 
+  const removeError = () => {
+    setError(null);
+  };
+
   return (
     <UserContext.Provider
-      value={{ error, user, loading, login, register, logout }}>
+      value={{ error, user, loading, login, register, logout, removeError }}>
       {children}
     </UserContext.Provider>
   );

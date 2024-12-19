@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
 import ChatPage from './pages/ChatPage';
+import AuthPage from './pages/AuthPage';
 
 export const routes = createBrowserRouter([
   {
@@ -16,5 +17,9 @@ export const routes = createBrowserRouter([
         element: <ChatPage isGroup={true} />,
       },
     ],
+  },
+  {
+    path: '/auth',
+    element: <AuthPage />,
   },
 ]);
