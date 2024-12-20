@@ -33,7 +33,7 @@ export default function AuthPage() {
   if (user) return <Navigate to={'/'} />;
   return (
     <main className="h-dvh max-w-screen-2xl mx-auto flex justify-center items-center lg:justify-between">
-      <div className="w-11/12 max-w-md flex flex-col shadow-md shadow-gray-600 rounded p-5 pb-8 lg:h-full lg:justify-center lg:shadow-none lg:border-r-2 border-gray-300">
+      <div className="w-11/12 max-w-md flex flex-col rounded p-5 pb-8 sm:shadow-md sm:shadow-gray-600 lg:h-full lg:justify-center lg:shadow-none lg:border-r-2 border-gray-300">
         <h3 className="text-3xl font-semibold mb-5 text-center">
           {isLogin ? 'Login' : 'Register'}
         </h3>
@@ -82,7 +82,10 @@ export default function AuthPage() {
             </>
           )}
 
-          <Button disabled={loading} type="submit">
+          <Button
+            disabled={loading}
+            type="submit"
+            className="mx-auto px-8 py-2">
             {loading ? (
               <svg
                 className="mx-auto w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

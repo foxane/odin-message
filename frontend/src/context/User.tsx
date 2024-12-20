@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 
-interface User {
+export interface User {
   id: string;
   name: string;
 }
@@ -116,7 +116,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         setError(err);
       } else {
         console.error('Unexpected error:', err);
-        setError(new Error('Unexpected error'));
+        setError(new Error(`Unexpected error ${JSON.stringify(err)}`));
       }
     } finally {
       setLoading(false);
