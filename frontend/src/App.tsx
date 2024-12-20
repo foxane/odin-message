@@ -3,9 +3,10 @@ import { useUserContext } from './hooks/useUserContext';
 import { User } from './context/User';
 import { useEffect, useMemo, useState } from 'react';
 import Navbar from './components/Navbar';
+import { AiOutlineLogout } from 'react-icons/ai';
 
 export default function App() {
-  const { user } = useUserContext();
+  const { user, logout } = useUserContext();
   const isChatOpen = useParams().chatId;
 
   const [chats, setChats] = useState<Chat[] | null>(null);
@@ -27,7 +28,7 @@ export default function App() {
     );
   };
 
-  const outletContext = { groupList, chatList, addMessage };
+  const outletContext = { groupList, chatList, addMessage, loading, error };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -59,16 +60,26 @@ export default function App() {
 
   if (!user) return <Navigate to={'/auth'} />;
   return (
-    <main className="h-dvh">
-      {loading && <p>Loading</p>}
-      {error && <p>{error}</p>}
-
+    <main className="h-dvh w-full max-w-screen-2xl mx-auto lg:flex">
       {!isChatOpen && (
+        // Small screen navbar
         /* Remove navbar when chat is open */
-        <header className="fixed bottom-0 h-16 w-full bg-gray-700">
-          <Navbar />
+        <header className="fixed bottom-0 h-16 w-full bg-gray-700 lg:hidden">
+          <Navbar className="h-full flex-1 flex justify-evenly items-center" />
         </header>
       )}
+
+      {/* Large screen */}
+      <header className="hidden p-5 bg-gray-700 flex-col justify-between lg:flex">
+        <Navbar className="flex flex-col gap-8 items-center" />
+
+        <button onClick={logout}>
+          <AiOutlineLogout
+            className="fill-white hover:fill-red-500"
+            size={35}
+          />
+        </button>
+      </header>
 
       <Outlet context={outletContext} />
     </main>
@@ -95,4 +106,6 @@ export interface ChatOutletContext {
   groupList: Chat[] | null;
   chatList: Chat[] | null;
   addMessage: (newMessage: Message) => void;
+  loading: boolean;
+  error: string;
 }

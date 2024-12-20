@@ -2,6 +2,7 @@ import { FaUser, FaUsers } from 'react-icons/fa';
 import { Chat } from '../App';
 import { useUserContext } from '../hooks/useUserContext';
 import { LinkProps, Link } from 'react-router-dom';
+import { getTime } from '../lib/utils';
 
 export default function ChatCard({ chat, active, ...props }: Props) {
   const { user } = useUserContext();
@@ -26,7 +27,9 @@ export default function ChatCard({ chat, active, ...props }: Props) {
         </p>
       </div>
 
-      <p className="text-end me-6 font-normal">{latestMsg?.createdAt}</p>
+      <p className="text-end me-6 text-sm font-light">
+        {latestMsg && getTime(latestMsg.createdAt)}
+      </p>
     </Link>
   );
 }

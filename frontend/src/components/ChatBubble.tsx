@@ -1,6 +1,7 @@
 import { FaUser } from 'react-icons/fa';
 import { Message } from '../App';
 import { useUserContext } from '../hooks/useUserContext';
+import { getTime } from '../lib/utils';
 
 export default function ChatBubble({ message }: Props) {
   // Infer if msg is received or sent
@@ -11,10 +12,9 @@ export default function ChatBubble({ message }: Props) {
     <div className={`w-full p-1 flex ${isSend ? 'justify-end' : ''}`}>
       <div className="max-w-96 flex items-start gap-2">
         {!isSend && (
-          <p className="flex-col-reverse text-sm font-semibold">
+          <div className="">
             <FaUser size={30} />
-            {message.user.name}
-          </p>
+          </div>
         )}
 
         <div
@@ -23,10 +23,13 @@ export default function ChatBubble({ message }: Props) {
               ? 'rounded-tr-none'
               : 'rounded-tl-none' /* Change radius based on send */
           }`}>
+          {!isSend && (
+            <p className="text-xs mb-1 font-semibold">{message.user.name}</p>
+          )}
           <div className="text-sm">
-            <p className="whitespace-pre-wrap">{message.content}</p>
-            <p className="mt-2 text-end font-thin text-xs">
-              {message.createdAt}
+            <p className="break-words">{message.content}</p>
+            <p className="mt-0.5 text-end font-thin text-xs">
+              {getTime(message.createdAt)}
             </p>
           </div>
         </div>
