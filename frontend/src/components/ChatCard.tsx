@@ -1,8 +1,8 @@
-import { FaUser, FaUsers } from 'react-icons/fa';
 import { Chat } from '../App';
 import { useUserContext } from '../hooks/useUserContext';
 import { LinkProps, Link } from 'react-router-dom';
 import { getTime } from '../lib/utils';
+import { UserGroupIcon, UserIcon } from '@heroicons/react/24/solid';
 
 export default function ChatCard({ chat, active, ...props }: Props) {
   const { user } = useUserContext();
@@ -16,7 +16,11 @@ export default function ChatCard({ chat, active, ...props }: Props) {
       className={`w-full flex items-center min-w-64 gap-2 p-2 border-b border-black active:bg-gray-300 hover:bg-gray-200 ${
         active ? 'bg-gray-300' : ''
       }`}>
-      {chat.isGroup ? <FaUsers size={30} /> : <FaUser size={30} />}
+      {chat.isGroup ? (
+        <UserGroupIcon className="w-10" />
+      ) : (
+        <UserIcon className="w-10" />
+      )}
 
       <div className="flex-1 flex flex-col items-start justify-start overflow-hidden">
         <p className="font-semibold truncate">

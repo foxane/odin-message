@@ -1,5 +1,8 @@
-import { FaComments } from 'react-icons/fa';
-import { FaGear, FaUserGroup } from 'react-icons/fa6';
+import {
+  ChatBubbleLeftIcon,
+  Cog6ToothIcon,
+  UserGroupIcon,
+} from '@heroicons/react/24/solid';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar({
@@ -10,25 +13,22 @@ export default function Navbar({
   return (
     <nav {...props}>
       <Link to={'/chat'}>
-        <FaComments
-          size={35}
-          className={`fill-gray-100 ${
+        <ChatBubbleLeftIcon
+          className={`fill-gray-100 w-10 ${
             active.includes('/chat') ? ' fill-sky-400' : ''
           }`}
         />
       </Link>
       <Link to={'/group'}>
-        <FaUserGroup
-          size={35}
-          className={`fill-gray-100 ${
+        <UserGroupIcon
+          className={`fill-gray-100 w-10 ${
             active.includes('/group') ? ' fill-sky-400' : ''
           }`}
         />
       </Link>
       <Link to={'/settings'}>
-        <FaGear
-          size={35}
-          className={`fill-gray-100 ${
+        <Cog6ToothIcon
+          className={`fill-gray-100 w-10 ${
             active.includes('/setting') ? ' fill-sky-400' : ''
           }`}
         />

@@ -1,7 +1,7 @@
-import { FaUser } from 'react-icons/fa';
 import { Message } from '../App';
 import { useUserContext } from '../hooks/useUserContext';
 import { getTime } from '../lib/utils';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 export default function ChatBubble({ message }: Props) {
   // Infer if msg is received or sent
@@ -10,10 +10,10 @@ export default function ChatBubble({ message }: Props) {
 
   return (
     <div className={`w-full p-1 flex ${isSend ? 'justify-end' : ''}`}>
-      <div className="max-w-96 flex items-start gap-2">
+      <div className="max-w-96 flex items-start gap-1">
         {!isSend && (
           <div className="">
-            <FaUser size={30} />
+            <UserCircleIcon className="w-8" />
           </div>
         )}
 

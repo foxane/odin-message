@@ -1,5 +1,5 @@
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { useRef } from 'react';
-import { IoSend } from 'react-icons/io5';
 
 export default function ChatInput({ value, setValue, onSend }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -38,8 +38,8 @@ export default function ChatInput({ value, setValue, onSend }: Props) {
 
       <button
         onClick={handleSend}
-        className="bg-gray-500 rounded-full p-3 hover:bg-gray-700">
-        <IoSend fill="white" size={30} />
+        className="bg-gray-500 rounded-full p-2 hover:bg-gray-700">
+        <PaperAirplaneIcon className="w-8 fill-white" />
       </button>
     </>
   );

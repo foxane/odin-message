@@ -3,7 +3,7 @@ import { useUserContext } from './hooks/useUserContext';
 import { User } from './context/User';
 import { useEffect, useMemo, useState } from 'react';
 import Navbar from './components/Navbar';
-import { AiOutlineLogout } from 'react-icons/ai';
+import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
 
 export default function App() {
   const { user, logout } = useUserContext();
@@ -70,14 +70,11 @@ export default function App() {
       )}
 
       {/* Large screen */}
-      <header className="hidden p-5 bg-gray-700 flex-col justify-between lg:flex">
+      <header className="hidden py-5 px-2 bg-gray-700 flex-col justify-between lg:flex">
         <Navbar className="flex flex-col gap-8 items-center" />
 
         <button onClick={logout}>
-          <AiOutlineLogout
-            className="fill-white hover:fill-red-500"
-            size={35}
-          />
+          <ArrowLeftCircleIcon className="w-10 stroke-white hover:stroke-red-500" />
         </button>
       </header>
 

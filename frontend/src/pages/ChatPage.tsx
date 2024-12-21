@@ -2,7 +2,6 @@ import { useOutletContext, useParams } from 'react-router-dom';
 import { ChatOutletContext, Message } from '../App';
 import ChatCard from '../components/ChatCard';
 import ChatBubble from '../components/ChatBubble';
-import { FaArrowLeft, FaUser, FaUsers } from 'react-icons/fa';
 import { useUserContext } from '../hooks/useUserContext';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState, useMemo } from 'react';
@@ -10,7 +9,12 @@ import ChatInput from '../components/ChatInput';
 import { formatDate } from '../lib/utils';
 import { Fragment } from 'react';
 import ScreenSize from '../components/ui/ScreenSize';
-import { BiSearch } from 'react-icons/bi';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftIcon,
+  UserGroupIcon,
+  UserIcon,
+} from '@heroicons/react/24/solid';
 
 export default function ChatPage({ isGroup }: { isGroup: boolean }) {
   const { user } = useUserContext();
@@ -30,7 +34,7 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
     if (!activeChat || !user) return;
 
     // This is temporary debug, adding new message will listen to socket
-    // Maybe keeping it to show update directly to sender, without waiting server response
+    // Maybe keeping it to show update directly to sender, without waiting server response, should sender receive message they sent?
     addMessage({
       chatId: activeChat.id,
       content: messageInput,
@@ -67,7 +71,7 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
             {isGroup ? 'Groups' : 'Chats'}
           </p>
           <button className="me-3 rounded-md p-1 hover:bg-gray-500">
-            <BiSearch fill="white" size={25} />
+            <MagnifyingGlassIcon className="w-6 stroke-white" />
           </button>
         </div>
 
@@ -88,9 +92,13 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
           {/* Conversation header */}
           <div className="flex items-center gap-2 h-16 ps-10 bg-gray-700 fill-white text-white">
             <Link to={isGroup ? '/group' : '/chat'} className="pe-5 lg:hidden">
-              <FaArrowLeft size={35} fill="white" />
+              <ArrowLeftIcon className="w-9" />
             </Link>
-            {isGroup ? <FaUsers size={35} /> : <FaUser size={35} />}
+            {isGroup ? (
+              <UserGroupIcon className="w-8 fill-white" />
+            ) : (
+              <UserIcon className="w-8 fill-white" />
+            )}
             <p className="font-semibold">
               {isGroup ? activeChat.name : otherUser?.name}
             </p>
@@ -121,14 +129,10 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
         </div>
       )}
 
+      {/* Filler when no chat is active */}
       {!activeChat && (
         <div className="hidden h-dvh lg:w-8/12 lg:grid">
-          <div className="flex items-center gap-2 h-16 ps-10 bg-gray-700 fill-white text-white">
-            <Link to={isGroup ? '/group' : '/chat'} className="pe-5 lg:hidden">
-              <FaArrowLeft size={35} fill="white" />
-            </Link>
-            {isGroup ? <FaUsers size={35} /> : <FaUser size={35} />}
-          </div>
+          <div className="h-16 ps-10 bg-gray-700"></div>
           <p className="text-center text-3xl font-bold font-serif">
             {loading ? (
               <svg
