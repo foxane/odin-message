@@ -6,6 +6,7 @@ import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
 import { User } from './context/User';
 import useSocket from './hooks/useSocket';
 import { useEffect } from 'react';
+import ScreenSize from './components/ui/ScreenSize';
 
 export default function App() {
   const { user, logout } = useUserContext();
@@ -68,6 +69,8 @@ export default function App() {
           error,
         }}
       />
+
+      <ScreenSize />
     </main>
   );
 }

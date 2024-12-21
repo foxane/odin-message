@@ -1,8 +1,11 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
+import { UserData } from '../pages/SettingPage';
 
 export interface User {
   id: string;
   name: string;
+  email: string;
+  bio: string;
 }
 
 interface UserContextType {
@@ -13,6 +16,7 @@ interface UserContextType {
   logout: () => void;
   error: ApiError | null;
   removeError: () => void;
+  updateData: (userData: UserData) => Promise<void>;
 }
 
 export interface Credentials {
@@ -42,6 +46,7 @@ const UserContext = createContext<UserContextType>({
   logout: () => {},
   error: null,
   removeError: () => {},
+  updateData: async () => {},
 });
 
 enum AuthEndpoint {
@@ -140,9 +145,59 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
   };
 
+  const updateData = async (userData: UserData): Promise<void> => {
+    if (!user) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/users/${user.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        },
+      );
+
+      if (!response.ok) {
+        // Extract the error response
+        const errorData = (await response.json()) as ApiError;
+        throw new ApiError(errorData.message, errorData.errorDetails ?? []);
+      }
+
+      const data = (await response.json()) as AuthResponse;
+      setUser(data.user);
+      localStorage.setItem('token', data.token);
+    } catch (err: unknown) {
+      if (err instanceof ApiError) {
+        console.error('API Error:', err.message, err.errorDetails);
+        setError(err);
+      } else {
+        console.error('Unexpected error:', err);
+        setError(new Error(`Unexpected error ${JSON.stringify(err)}`));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <UserContext.Provider
-      value={{ error, user, loading, login, register, logout, removeError }}>
+      value={{
+        error,
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        removeError,
+        updateData,
+      }}>
       {children}
     </UserContext.Provider>
   );

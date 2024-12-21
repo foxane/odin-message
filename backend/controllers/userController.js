@@ -79,7 +79,7 @@ export const updateUser = async (req, res, next) => {
     })
     .then(user => {
       const { password: _, ...data } = user;
-      res.json({ data, token: generateJWT(data) });
+      res.json({ user: data, token: generateJWT(data) });
     })
     .catch(err => next(err));
 };
