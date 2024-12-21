@@ -55,5 +55,5 @@ export default function useSocket() {
     socket.emit('sendMessage', message);
   };
 
-  return { isConnected, newMessage, joinChat, sendMessage };
+  return { isConnected, newMessage, setNewMessage, joinChat, sendMessage };
 }

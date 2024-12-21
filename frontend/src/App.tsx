@@ -9,7 +9,8 @@ import { useEffect } from 'react';
 
 export default function App() {
   const { user, logout } = useUserContext();
-  const { isConnected, newMessage, joinChat, sendMessage } = useSocket();
+  const { isConnected, newMessage, setNewMessage, joinChat, sendMessage } =
+    useSocket();
 
   const isChatOpen = useParams().chatId;
   const { allChat, chatList, groupList, addMessage, loading, error } = useChats(
@@ -21,7 +22,8 @@ export default function App() {
     if (!newMessage) return;
 
     addMessage(newMessage);
-  }, [newMessage, addMessage]);
+    setNewMessage(null);
+  }, [newMessage, addMessage, setNewMessage]);
 
   // Join all chat
   useEffect(() => {
