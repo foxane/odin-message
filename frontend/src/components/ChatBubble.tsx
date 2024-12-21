@@ -18,7 +18,7 @@ export default function ChatBubble({ message }: Props) {
         )}
 
         <div
-          className={`p-3 bg-gray-500 text-white rounded-2xl min-w-44 ${
+          className={`p-3 bg-gray-700 text-white rounded-2xl min-w-44 ${
             isSend
               ? 'rounded-tr-none'
               : 'rounded-tl-none' /* Change radius based on send */

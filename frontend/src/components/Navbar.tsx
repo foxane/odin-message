@@ -14,21 +14,21 @@ export default function Navbar({
     <nav {...props}>
       <Link to={'/chat'}>
         <ChatBubbleLeftIcon
-          className={`fill-gray-100 w-10 ${
+          className={`fill-gray-100 w-8 ${
             active.includes('/chat') ? ' fill-sky-400' : ''
           }`}
         />
       </Link>
       <Link to={'/group'}>
         <UserGroupIcon
-          className={`fill-gray-100 w-10 ${
+          className={`fill-gray-100 w-8 ${
             active.includes('/group') ? ' fill-sky-400' : ''
           }`}
         />
       </Link>
       <Link to={'/settings'}>
         <Cog6ToothIcon
-          className={`fill-gray-100 w-10 ${
+          className={`fill-gray-100 w-8 ${
             active.includes('/setting') ? ' fill-sky-400' : ''
           }`}
         />
