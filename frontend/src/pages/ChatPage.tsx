@@ -10,7 +10,7 @@ import { MessageList } from '../components/MessageList';
 
 export default function ChatPage({ isGroup }: { isGroup: boolean }) {
   const { user } = useUserContext();
-  const { groupList, chatList, addMessage, loading, error } =
+  const { groupList, chatList, addMessage, loading, error, sendMessage } =
     useOutletContext<ChatOutletContext>();
   const { chatId } = useParams();
 
@@ -24,7 +24,8 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
   const [messageInput, setMessageInput] = useState('');
   const handleSend = () => {
     if (!activeChat || !user) return;
-    addMessage({
+
+    const newMsg = {
       chatId: activeChat.id,
       content: messageInput,
       createdAt: new Date().toString(),
@@ -33,7 +34,9 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
         id: user.id,
         name: user.name,
       },
-    });
+    };
+    addMessage(newMsg); // Update ui
+    sendMessage(newMsg); // Send new message to server
     setMessageInput('');
   };
 
@@ -72,7 +75,11 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
         <div className="hidden h-dvh lg:w-8/12 lg:grid">
           <ChatHeader isGroup={isGroup} chatName="" />
           <p className="text-center text-3xl font-bold font-serif">
-            {loading ? <svg>...</svg> : error ? error + ':(' : 'Hewwo :)'}
+            {loading
+              ? 'Fetching messages...'
+              : error
+              ? error + ':('
+              : 'Checkout the global chat in groups :)'}
           </p>
         </div>
       )}

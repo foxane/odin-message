@@ -11,9 +11,9 @@ interface ChatListProps {
 export function ChatList({ isGroup, list, activeChatId }: ChatListProps) {
   return (
     <div
-      className={`border-r border-gray-700 ${
+      className={`${
         activeChatId ? ' hidden' : ''
-      }  lg:block lg:w-4/12 lg:bg-gray-400`}>
+      }  lg:block lg:w-4/12 lg:bg-gray-300`}>
       <div className="bg-gray-700 h-16 ps-3 flex justify-between items-center">
         <p className="font-bold text-xl text-white">
           {isGroup ? 'Groups' : 'Chats'}

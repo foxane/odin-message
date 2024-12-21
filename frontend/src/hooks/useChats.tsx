@@ -1,25 +1,28 @@
 // hooks/useChats.ts
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Chat, Message } from '../App';
 
 export function useChats(userId: string | undefined) {
-  const [chats, setChats] = useState<Chat[] | null>(null);
+  const [allChat, setChats] = useState<Chat[] | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const chatList = useMemo(() => chats?.filter(el => !el.isGroup), [chats]);
-  const groupList = useMemo(() => chats?.filter(el => el.isGroup), [chats]);
+  const chatList = useMemo(() => allChat?.filter(el => !el.isGroup), [allChat]);
+  const groupList = useMemo(() => allChat?.filter(el => el.isGroup), [allChat]);
 
-  const addMessage = (newMessage: Message) => {
-    if (!chats) return;
-    setChats(
-      chats.map(chat =>
-        chat.id === newMessage.chatId
-          ? { ...chat, messages: [...chat.messages, newMessage] }
-          : chat,
-      ),
-    );
-  };
+  const addMessage = useCallback(
+    (newMessage: Message) => {
+      if (!allChat) return;
+      setChats(
+        allChat.map(chat =>
+          chat.id === newMessage.chatId
+            ? { ...chat, messages: [...chat.messages, newMessage] }
+            : chat,
+        ),
+      );
+    },
+    [allChat],
+  );
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -47,6 +50,7 @@ export function useChats(userId: string | undefined) {
   }, [userId]);
 
   return {
+    allChat,
     chatList,
     groupList,
     addMessage,

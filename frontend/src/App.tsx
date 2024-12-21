@@ -4,13 +4,40 @@ import { useChats } from './hooks/useChats';
 import Navbar from './components/Navbar';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
 import { User } from './context/User';
+import useSocket from './hooks/useSocket';
+import { useEffect } from 'react';
 
 export default function App() {
   const { user, logout } = useUserContext();
+  const { isConnected, newMessage, joinChat, sendMessage } = useSocket();
+
   const isChatOpen = useParams().chatId;
-  const { chatList, groupList, addMessage, loading, error } = useChats(
+  const { allChat, chatList, groupList, addMessage, loading, error } = useChats(
     user?.id,
   );
+
+  // Append new message to local data
+  useEffect(() => {
+    if (!newMessage) return;
+
+    addMessage(newMessage);
+  }, [newMessage, addMessage]);
+
+  // Join all chat
+  useEffect(() => {
+    if (!allChat || !isConnected) return;
+
+    const chatIds: string[] = allChat.map(el => el.id);
+    joinChat(chatIds);
+
+    /* Only joining when allChat.length change, this prevent updating ui message 
+    using addMessage() from useChats (changing state of allChats) make socket rejoin rooms.
+
+    NOTE: probably make list of chat ids and memoize it based on allChats length, but useEffect
+          with allChat.length below works for now. Just silencing eslint error
+    */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [joinChat, isConnected, allChat?.length]);
 
   if (!user) return <Navigate to={'/auth'} />;
 
@@ -29,7 +56,16 @@ export default function App() {
         </button>
       </header>
 
-      <Outlet context={{ groupList, chatList, addMessage, loading, error }} />
+      <Outlet
+        context={{
+          groupList,
+          chatList,
+          addMessage,
+          sendMessage,
+          loading,
+          error,
+        }}
+      />
     </main>
   );
 }
@@ -54,6 +90,7 @@ export interface ChatOutletContext {
   groupList: Chat[] | null;
   chatList: Chat[] | null;
   addMessage: (newMessage: Message) => void;
+  sendMessage: (newMessage: Message) => void;
   loading: boolean;
   error: string;
 }

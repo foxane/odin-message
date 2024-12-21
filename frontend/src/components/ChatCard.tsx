@@ -14,7 +14,7 @@ export default function ChatCard({ chat, active, ...props }: Props) {
     <Link
       {...props}
       className={`w-full flex items-center min-w-64 gap-2 p-2 border-b border-black active:bg-gray-300 hover:bg-gray-200 ${
-        active ? 'bg-gray-300' : ''
+        active ? ' bg-white' : ''
       }`}>
       {chat.isGroup ? (
         <UserGroupIcon className="w-10" />

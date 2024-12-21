@@ -42,7 +42,7 @@ io.on('connection', socket => {
         include: { user: { select: { id: true, name: true } } },
       })
       .then(message => {
-        io.in(chatId).emit('newMessage', message);
+        socket.to(chatId).emit('newMessage', message);
       })
       .catch(err => {
         console.error('Error saving message:', err);
