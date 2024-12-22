@@ -47,7 +47,6 @@ export function useChats(userId: string | undefined) {
         const data = (await res.json()) as Chat[];
         setChats(data);
       } catch (error) {
-        console.log(error);
         if (error instanceof Error) setError(error.message);
         else setError('Unexpected error');
       } finally {

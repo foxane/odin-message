@@ -1,7 +1,6 @@
 import Input from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Link, Navigate } from 'react-router-dom';
-import ScreenSize from '../components/ui/ScreenSize';
 import { useState } from 'react';
 import { Credentials } from '../context/User';
 import { useUserContext } from '../hooks/useUserContext';
@@ -106,8 +105,6 @@ export default function AuthPage() {
             )}
           </Button>
         </form>
-
-        <ScreenSize />
       </div>
 
       <img

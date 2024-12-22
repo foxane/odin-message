@@ -23,7 +23,6 @@ export default function useGetUsers() {
         const data = (await res.json()) as User[];
         setUsers(data.filter(el => el.id !== user.id));
       } catch (error) {
-        console.log(error);
         if (error instanceof Error) setError(error.message);
         else setError('Unexpected error');
       } finally {

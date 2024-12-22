@@ -82,8 +82,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       .then(user => {
         setUser(user);
       })
-      .catch((err: unknown) => {
-        console.log(err);
+      .catch(() => {
         setUser(null);
         localStorage.removeItem('token');
       })
@@ -117,10 +116,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       setUser(data.user);
     } catch (err: unknown) {
       if (err instanceof ApiError) {
-        console.error('API Error:', err.message, err.errorDetails);
         setError(err);
       } else {
-        console.error('Unexpected error:', err);
         setError(new Error(`Unexpected error ${JSON.stringify(err)}`));
       }
     } finally {
@@ -175,10 +172,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('token', data.token);
     } catch (err: unknown) {
       if (err instanceof ApiError) {
-        console.error('API Error:', err.message, err.errorDetails);
         setError(err);
       } else {
-        console.error('Unexpected error:', err);
         setError(new Error(`Unexpected error ${JSON.stringify(err)}`));
       }
     } finally {

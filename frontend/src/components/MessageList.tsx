@@ -5,10 +5,9 @@ import { Message } from '../App';
 
 interface MessageListProps {
   messages: Message[] | null;
-  endRef: React.RefObject<HTMLDivElement>;
 }
 
-export function MessageList({ messages, endRef }: MessageListProps) {
+export function MessageList({ messages }: MessageListProps) {
   const groupedMessages = messages?.reduce<Record<string, Message[]>>(
     (acc, message) => {
       const dateKey = formatDate(message.createdAt);
@@ -29,7 +28,6 @@ export function MessageList({ messages, endRef }: MessageListProps) {
           ))}
         </Fragment>
       ))}
-      <div ref={endRef} />
     </div>
   );
 }

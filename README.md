@@ -1,3 +1,5 @@
 # Clam
 
-Messaging app platform that no one asked for.
+Odin project assignment
+
+![alt](/frontend/public/image.png)

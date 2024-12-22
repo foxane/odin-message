@@ -9,11 +9,27 @@ export const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
     const pwHash = await bcrypt.hash(password, 10);
+
     const user = await prisma.user.create({
       data: { name, email, password: pwHash },
     });
 
-    const { password: _, ...data } = user; // Remove password from response
+    const globalChat = await prisma.chat.findFirst({
+      where: { isGroup: true, id: 'global_chat' },
+    });
+
+    await prisma.chat.update({
+      where: { id: globalChat.id },
+      data: {
+        members: {
+          connect: { id: user.id },
+        },
+      },
+    });
+
+    const { password: _, ...data } = user;
+
+    // Send the response
     res.status(201).json({
       user: data,
       token: generateJWT(data),

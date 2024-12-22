@@ -28,6 +28,7 @@ CREATE TABLE "Message" (
 -- CreateTable
 CREATE TABLE "Chat" (
     "id" TEXT NOT NULL,
+    "name" TEXT,
     "isGroup" BOOLEAN NOT NULL,
     "editedAt" TIMESTAMP(3) NOT NULL,
 
@@ -49,10 +50,10 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE INDEX "_ChatToUser_B_index" ON "_ChatToUser"("B");
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_chatId_fkey" FOREIGN KEY ("chatId") REFERENCES "Chat"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Message" ADD CONSTRAINT "Message_chatId_fkey" FOREIGN KEY ("chatId") REFERENCES "Chat"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Message" ADD CONSTRAINT "Message_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ChatToUser" ADD CONSTRAINT "_ChatToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Chat"("id") ON DELETE CASCADE ON UPDATE CASCADE;

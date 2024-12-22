@@ -9,6 +9,7 @@ export const routes = createBrowserRouter([
     // root will use App as layout
     path: '/',
     element: <App />,
+    errorElement: <p>Something went wrong</p>,
     children: [
       { index: true, element: <Navigate to={'/chat'} /> },
       { path: '/chat/:chatId?', element: <ChatPage isGroup={false} /> },

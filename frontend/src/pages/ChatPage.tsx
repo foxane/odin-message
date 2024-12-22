@@ -3,7 +3,6 @@ import { ChatOutletContext } from '../App';
 import { useUserContext } from '../hooks/useUserContext';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import ChatInput from '../components/ChatInput';
-import ScreenSize from '../components/ui/ScreenSize';
 import { ChatHeader } from '../components/ChatHeader';
 import { MessageList } from '../components/MessageList';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
@@ -43,7 +42,7 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
   const msgEndRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     msgEndRef.current?.scrollIntoView({ behavior: 'instant' });
-  });
+  }, []);
 
   return (
     <section className="w-full lg:flex">
@@ -67,14 +66,16 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
           </div>
 
           {/* Chat list, hidden when showing user list */}
-          {list?.map(el => (
-            <ChatCard
-              to={`/${isGroup ? 'group' : 'chat'}/${el.id}`}
-              active={el.id === activeChat?.id}
-              chat={el}
-              key={el.id}
-            />
-          ))}
+          {list
+            ?.filter(el => el.messages.length > 0)
+            .map(el => (
+              <ChatCard
+                to={`/${isGroup ? 'group' : 'chat'}/${el.id}`}
+                active={el.id === activeChat?.id}
+                chat={el}
+                key={el.id}
+              />
+            ))}
         </div>
       ) : (
         <SearchUserSection
@@ -93,7 +94,7 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
             showBackButton
           />
 
-          <MessageList messages={activeChat.messages} endRef={msgEndRef} />
+          <MessageList messages={activeChat.messages} />
 
           <div className="w-full flex items-end gap-1 pb-4 pt-2 px-6">
             <ChatInput
@@ -101,6 +102,7 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
               setValue={setMessageInput}
               onSend={handleSend}
             />
+            <div ref={msgEndRef} />
           </div>
         </div>
       )}
@@ -118,8 +120,6 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
           </p>
         </div>
       )}
-
-      <ScreenSize />
     </section>
   );
 }
