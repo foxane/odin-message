@@ -65,17 +65,24 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
             </button>
           </div>
 
-          {/* Chat list, hidden when showing user list */}
-          {list
-            ?.filter(el => el.messages.length > 0)
-            .map(el => (
-              <ChatCard
-                to={`/${isGroup ? 'group' : 'chat'}/${el.id}`}
-                active={el.id === activeChat?.id}
-                chat={el}
-                key={el.id}
-              />
-            ))}
+          {/* Chat list */}
+          {list && list.filter(el => el.messages.length > 0).length > 0 ? (
+            list
+              .filter(el => el.messages.length > 0)
+              .map(el => (
+                <ChatCard
+                  to={`/${isGroup ? 'group' : 'chat'}/${el.id}`}
+                  active={el.id === activeChat?.id}
+                  chat={el}
+                  key={el.id}
+                />
+              ))
+          ) : (
+            <div className="text-center m-5 font-semibold">
+              <p>Click search button above to start a conversation</p>
+              <p>or go to global chat in group section</p>
+            </div>
+          )}
         </div>
       ) : (
         <SearchUserSection
