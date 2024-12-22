@@ -24,6 +24,14 @@ export function useChats(userId: string | undefined) {
     [allChat],
   );
 
+  const addChat = useCallback(
+    (newChat: Chat) => {
+      if (!allChat) return;
+      setChats([...allChat, newChat]);
+    },
+    [allChat],
+  );
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!userId || !token) return;
@@ -54,6 +62,7 @@ export function useChats(userId: string | undefined) {
     chatList,
     groupList,
     addMessage,
+    addChat,
     loading,
     error,
   };

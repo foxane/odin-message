@@ -5,8 +5,10 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import ChatInput from '../components/ChatInput';
 import ScreenSize from '../components/ui/ScreenSize';
 import { ChatHeader } from '../components/ChatHeader';
-import { ChatList } from '../components/ChatList';
 import { MessageList } from '../components/MessageList';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import ChatCard from '../components/ChatCard';
+import SearchUserSection from '../components/SearchUserSection';
 
 export default function ChatPage({ isGroup }: { isGroup: boolean }) {
   const { user } = useUserContext();
@@ -21,6 +23,7 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
 
   const otherUser = activeChat?.members.find(usr => usr.id !== user?.id);
 
+  const [searchUser, setSearchUser] = useState(false);
   const [messageInput, setMessageInput] = useState('');
   const handleSend = () => {
     if (!activeChat || !user) return;
@@ -30,10 +33,7 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
       content: messageInput,
       createdAt: new Date().toString(),
       id: new Date().toISOString(),
-      user: {
-        id: user.id,
-        name: user.name,
-      },
+      user,
     };
     addMessage(newMsg); // Update ui
     sendMessage(newMsg); // Send new message to server
@@ -47,7 +47,42 @@ export default function ChatPage({ isGroup }: { isGroup: boolean }) {
 
   return (
     <section className="w-full lg:flex">
-      <ChatList isGroup={isGroup} list={list} activeChatId={activeChat?.id} />
+      {/* Left section, hidden when chat active and screen is small*/}
+      {!searchUser ? (
+        <div
+          className={`${
+            activeChat ? ' hidden' : ''
+          }  lg:block lg:w-4/12 lg:bg-gray-300`}>
+          <div className="bg-gray-700 h-16 ps-3 flex justify-between items-center">
+            <p className="font-bold text-xl text-white">
+              {isGroup ? 'Groups' : 'Chats'}
+            </p>
+            <button
+              className="me-3 rounded-md p-1 hover:bg-gray-500"
+              onClick={() => {
+                setSearchUser(!searchUser);
+              }}>
+              <MagnifyingGlassIcon className="w-6 stroke-white" />
+            </button>
+          </div>
+
+          {/* Chat list, hidden when showing user list */}
+          {list?.map(el => (
+            <ChatCard
+              to={`/${isGroup ? 'group' : 'chat'}/${el.id}`}
+              active={el.id === activeChat?.id}
+              chat={el}
+              key={el.id}
+            />
+          ))}
+        </div>
+      ) : (
+        <SearchUserSection
+          handleClose={() => {
+            setSearchUser(false);
+          }}
+        />
+      )}
 
       {/* Conversation */}
       {activeChat && (

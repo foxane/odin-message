@@ -4,9 +4,6 @@ import { generateJWT } from './authController.js';
 
 /** @type {import("express").RequestHandler} */
 export const getAllUser = (req, res, next) => {
-  const { role } = req.user;
-  if (role !== 'ADMIN') return res.status(403).end();
-
   prisma.user
     .findMany({
       select: { id: true, name: true, email: true, bio: true, role: true },

@@ -25,8 +25,8 @@ model Message {
   isDeleted Boolean  @default(false)
   userId    String
   chatId    String
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade) // Cascade delete for messages
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade delete for messages
 }
 
 model Chat {

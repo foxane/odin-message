@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useParams } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useUserContext } from './hooks/useUserContext';
 import { useChats } from './hooks/useChats';
 import Navbar from './components/Navbar';
@@ -10,13 +10,21 @@ import ScreenSize from './components/ui/ScreenSize';
 
 export default function App() {
   const { user, logout } = useUserContext();
-  const { isConnected, newMessage, setNewMessage, joinChat, sendMessage } =
-    useSocket();
+  const {
+    isConnected,
+    newMessage,
+    setNewMessage,
+    newChat,
+    setNewChat,
+    joinChat,
+    sendMessage,
+    createChat,
+  } = useSocket();
+  const navigate = useNavigate();
 
   const isChatOpen = useParams().chatId;
-  const { allChat, chatList, groupList, addMessage, loading, error } = useChats(
-    user?.id,
-  );
+  const { allChat, chatList, groupList, addMessage, addChat, loading, error } =
+    useChats(user?.id);
 
   // Append new message to local data
   useEffect(() => {
@@ -25,6 +33,15 @@ export default function App() {
     addMessage(newMessage);
     setNewMessage(null);
   }, [newMessage, addMessage, setNewMessage]);
+
+  // Append new chat to local data
+  useEffect(() => {
+    if (!newChat) return;
+
+    addChat(newChat);
+    if (newChat.isCreator) void navigate(`/chat/${newChat.id}`);
+    setNewChat(null);
+  }, [addChat, newChat, setNewChat, navigate]);
 
   // Join all chat
   useEffect(() => {
@@ -65,6 +82,7 @@ export default function App() {
           chatList,
           addMessage,
           sendMessage,
+          createChat,
           loading,
           error,
         }}
@@ -81,6 +99,7 @@ export interface Chat {
   name?: string;
   messages: Message[];
   members: User[];
+  isCreator?: boolean;
 }
 
 export interface Message {
@@ -96,6 +115,7 @@ export interface ChatOutletContext {
   chatList: Chat[] | null;
   addMessage: (newMessage: Message) => void;
   sendMessage: (newMessage: Message) => void;
+  createChat: (receiverId: string) => void;
   loading: boolean;
   error: string;
 }

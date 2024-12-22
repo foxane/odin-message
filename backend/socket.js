@@ -30,6 +30,7 @@ io.use((socket, next) => {
 });
 
 io.on('connection', socket => {
+  socket.join(socket.user.id); // Listen
   socket.on('joinChat', chatId => socket.join(chatId));
 
   socket.on('sendMessage', data => {
@@ -49,6 +50,49 @@ io.on('connection', socket => {
         socket.emit('error', { message: 'Failed to send message' });
       });
   });
+
+  socket.on('createChat', async ({ receiverId }) => {
+    const senderId = socket.user.id;
+
+    let chat = await prisma.chat.findFirst({
+      where: {
+        isGroup: false,
+        members: {
+          every: {
+            id: { in: [senderId, receiverId] },
+          },
+        },
+      },
+    });
+
+    if (!chat) {
+      // Create a new chat
+      chat = await prisma.chat.create({
+        data: {
+          isGroup: false,
+          members: {
+            connect: [{ id: senderId }, { id: receiverId }],
+          },
+        },
+        include: {
+          members: { select: { id: true, name: true } },
+          messages: true,
+        },
+      });
+    }
+
+    // Send back to sender
+    socket.emit('newChat', { chat, isCreator: true });
+
+    // Notify receiver
+    socket.to(receiverId).emit('newChat', { chat, isCreator: false });
+  });
 });
 
 export { app, server, io };
+/* 
+TODO: 
+  - Join socket room with userId
+  - Create createChat event
+    This will notify all member in this chat with socket room with user id from above step
+*/

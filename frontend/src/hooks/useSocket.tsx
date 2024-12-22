@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { Message } from '../App';
+import { Chat, Message } from '../App';
 
 export default function useSocket() {
   const url = import.meta.env.VITE_API_URL;
@@ -9,6 +9,7 @@ export default function useSocket() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [newMessage, setNewMessage] = useState<Message | null>(null);
+  const [newChat, setNewChat] = useState<Chat | null>(null);
 
   // Socket init
   useEffect(() => {
@@ -26,18 +27,24 @@ export default function useSocket() {
     };
   }, [token, url]);
 
-  // Message listener
+  // EventListener
   useEffect(() => {
     if (!socket) return;
 
     const handleNewMessage = (newMsg: Message): void => {
       setNewMessage(newMsg);
     };
+    const handleNewChat = ({ chat, isCreator }: NewChatArgs) => {
+      setNewChat({ ...chat, isCreator });
+    };
+
     socket.on('newMessage', handleNewMessage);
+    socket.on('newChat', handleNewChat);
 
     return () => {
       setNewMessage(null);
       socket.off('newMessage', handleNewMessage);
+      socket.on('newChat', handleNewChat);
     };
   }, [socket]);
 
@@ -55,5 +62,25 @@ export default function useSocket() {
     socket.emit('sendMessage', message);
   };
 
-  return { isConnected, newMessage, setNewMessage, joinChat, sendMessage };
+  const createChat = (receiverId: string) => {
+    if (!socket || !isConnected) return;
+
+    socket.emit('createChat', { receiverId });
+  };
+
+  return {
+    isConnected,
+    newMessage,
+    setNewMessage,
+    newChat,
+    setNewChat,
+    createChat,
+    joinChat,
+    sendMessage,
+  };
+}
+
+interface NewChatArgs {
+  chat: Chat;
+  isCreator: boolean;
 }

@@ -4,12 +4,12 @@ import { formatDate } from '../lib/utils';
 import { Message } from '../App';
 
 interface MessageListProps {
-  messages: Message[];
+  messages: Message[] | null;
   endRef: React.RefObject<HTMLDivElement>;
 }
 
 export function MessageList({ messages, endRef }: MessageListProps) {
-  const groupedMessages = messages.reduce<Record<string, Message[]>>(
+  const groupedMessages = messages?.reduce<Record<string, Message[]>>(
     (acc, message) => {
       const dateKey = formatDate(message.createdAt);
       (acc[dateKey] ??= []).push(message);
@@ -18,6 +18,7 @@ export function MessageList({ messages, endRef }: MessageListProps) {
     {},
   );
 
+  if (!groupedMessages) return <p>Loading..</p>;
   return (
     <div className="overflow-y-scroll">
       {Object.entries(groupedMessages).map(([date, messages]) => (
