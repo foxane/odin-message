@@ -6,6 +6,7 @@ import authRouter from './routes/authRouter.js';
 import chatRouter from './routes/chatRouter.js';
 import { app, server } from './socket.js'; // Server initialization
 import { errorMiddleware, notFoundMiddleware } from './middlewares/error.js';
+import { cronScheduler } from './middlewares/cron.js';
 
 app.use(cors);
 app.use(morgan);
@@ -21,4 +22,5 @@ app.use(errorMiddleware);
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log('Server listening on port: ', port);
+  cronScheduler();
 });
