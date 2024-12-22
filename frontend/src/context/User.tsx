@@ -68,6 +68,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
     setLoading(true);
     fetch(url, {
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -100,6 +101,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const response = await fetch(url, {
+        mode: 'cors',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cred),
@@ -152,6 +154,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/users/${user.id}`,
         {
+          mode: 'cors',
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,

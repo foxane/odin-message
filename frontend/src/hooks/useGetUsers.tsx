@@ -17,6 +17,7 @@ export default function useGetUsers() {
     const fetchChats = async () => {
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+          mode: 'cors',
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error(res.statusText);

@@ -41,7 +41,7 @@ export function useChats(userId: string | undefined) {
       try {
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/users/${userId}/chats`,
-          { headers: { Authorization: `Bearer ${token}` } },
+          { headers: { Authorization: `Bearer ${token}` }, mode: 'cors' },
         );
         if (!res.ok) throw new Error(res.statusText);
         const data = (await res.json()) as Chat[];
